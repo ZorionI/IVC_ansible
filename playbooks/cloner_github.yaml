@@ -1,0 +1,33 @@
+---
+- name: Cloner ou mettre à jour le dépôt privé GitHub
+  hosts: web_servers
+  become: yes
+  vars:
+    repo_url: "https://github.com/ZorionI/IVC_ansible.git"
+    dest_path: "/home/vagrant/repo"
+    branch_name: "main"
+
+  tasks:
+    - name: Vérifier si le dossier du dépôt existe
+      ansible.builtin.stat:
+        path: "{{ dest_path }}"
+      register: git_repo
+
+    - name: Cloner le dépôt si ce n'est pas déjà fait
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ dest_path }}"
+        version: "{{ branch_name }}"
+        clone: yes
+        update: yes
+        accept_hostkey: yes
+      when: not git_repo.stat.exists
+
+    - name: Mettre à jour le dépôt
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ dest_path }}"
+        version: "{{ branch_name }}"
+        remote: origin
+        update: yes
+      when: git_repo.stat.exists

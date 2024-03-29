@@ -1,0 +1,11 @@
+---
+- name: Construire les images Docker
+  hosts: localhost
+  tasks:
+    - name: Construire l'image Docker pour le backend
+      ansible.builtin.shell:
+        cmd: docker build -f Dockerfile.backend -t backend:latest .
+        
+    - name: Construire l'image Docker pour le frontend
+      ansible.builtin.shell:
+        cmd: docker build -f Dockerfile.frontend -t frontend:latest .

@@ -1,0 +1,9 @@
+---
+- name: Configurer la sauvegarde automatique de la base de données
+  hosts: localhost
+  tasks:
+    - name: Créer une tâche cron pour sauvegarder la base de données chaque heure
+      ansible.builtin.cron:
+        name: "Sauvegarde DB PostgreSQL"
+        special_time: hourly
+        job: "docker exec <CONTENEUR_DB> pg_dump -U user dbname > /chemin/de/sauvegarde/db-backup-$(date +\%Y\%m\%d\%H\%M\%S).sql"

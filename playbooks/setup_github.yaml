@@ -1,0 +1,30 @@
+---
+- name: Configurer l'authentification GitHub sur la VM
+  hosts: web_servers
+  vars_prompt:
+    - name: github_username
+      prompt: Github username?
+      private: no
+
+    - name: github_token
+      prompt: Github token?
+      private: yes
+
+  tasks:
+    - name: Configurer le fichier .gitconfig
+      copy:
+        content: |
+          [user]
+              name = {{github_username}}
+              helper = store
+        dest: "/home/vagrant/.gitconfig"
+        owner: vagrant
+        group: vagrant
+        mode: '0644'
+
+    - name: Configurer le fichier .git-credentials
+      template:
+        src: "../templates/git-credentials.j2"
+        dest: "~/.git-credentials"
+        owner: "{{ ansible_user_id }}"
+        mode: '0600'

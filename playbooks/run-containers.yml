@@ -1,0 +1,7 @@
+---
+- name: Lancer les conteneurs Docker
+  hosts: localhost
+  tasks:
+    - name: Lancer les services avec docker-compose
+      ansible.builtin.shell:
+        cmd: docker-compose up -d
